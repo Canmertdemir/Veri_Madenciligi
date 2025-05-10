@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>GIF Bulucu</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>GIF Bulucu API</h1>
+    <p>Bir URL ve sorgu girerek görsel indirebilirsiniz.</p>
+
+    <form id="gifForm">
+        <label for="url">URL:</label><br>
+        <input type="text" id="url" name="url" placeholder="https://ornek.com" required><br><br>
+
+        <label for="sorgu">Sorgu:</label><br>
+        <input type="text" id="sorgu" name="sorgu" placeholder="gif anahtar kelimesi" required><br><br>
+
+        <button type="submit">Gönder</button>
+    </form>
+
+    <div id="sonuc" style="margin-top:20px;"></div>
+
+    <script>
+        document.getElementById('gifForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Sayfa yenilenmesini engelle
+
+            const url = document.getElementById('url').value;
+            const sorgu = document.getElementById('sorgu').value;
+
+            fetch('/cek-gif/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url, sorgu: sorgu })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const sonuc = document.getElementById('sonuc');
+                if (data.img_url) {
+                    sonuc.innerHTML = `
+                        <p style="color:green;">Görsel başarıyla indirildi.</p>
+                        <p><strong>Görsel URL:</strong> <a href="${data.img_url}" target="_blank">${data.img_url}</a></p>
+                        <img src="${data.img_url}" alt="İndirilen Görsel" width="300">
+                    `;
+                } else if (data.error) {
+                    sonuc.innerHTML = `<p style="color:red;">${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('sonuc').innerHTML = `<p style="color:red;">İstek sırasında hata oluştu: ${error}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
