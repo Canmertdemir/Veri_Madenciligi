@@ -22,7 +22,7 @@ def url_sorgu_al(url: str, sorgu: str):
         response.raise_for_status()
 
         soup = BeautifulSoup(response.content, 'html.parser')  # 'html.parser' kullanın
-  # lxml parser
+   # lxml parser
         img_tags = soup.find_all("img", src=True)
         print(f"{len(img_tags)} adet img bulundu.")  # DEBUG
 

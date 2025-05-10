@@ -1,4 +1,8 @@
-fastapi
+Flask
+request
+jsonify
+render_template
+requests
 uvicorn
 requests
 beautifulsoup4
